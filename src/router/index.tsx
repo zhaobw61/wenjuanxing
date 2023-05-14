@@ -69,3 +69,7 @@ const router = createBrowserRouter([
   }
 ])
 export default router;
+//  ------- 常用的变量 -------
+export const HOME_PATHNAME = '/'
+export const LOGIN_PATHNAME = '/login'
+export const REGISTER_PATHNAME = '/register'
