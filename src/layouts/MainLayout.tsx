@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
 import { Outlet } from 'react-router-dom';
 import { Layout } from 'antd';
-import styles from './ManageLayout.module.less'
+import styles from './MainLayout.module.less'
 
 const { Header, Content, Footer } = Layout;
 
 const MainLayout:FC = () => {
+  console.log('styles', styles)
   return (
     <Layout>
       <Header className={styles.header}>
@@ -15,7 +16,7 @@ const MainLayout:FC = () => {
       <Content className={styles.main}>
         <Outlet />
       </Content>
-      <Footer className={styles.footer}>Footer</Footer>
+      <Footer className={styles.footer}>cc 问卷 &copy; 2023 boowen </Footer>
     </Layout>
   )
 }
