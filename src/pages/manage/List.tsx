@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
+import { Typography } from "antd"
+
+const { Title } = Typography;
 
 
 export default function List() {
@@ -25,7 +28,7 @@ export default function List() {
     <>
       <div className={styles.header}>
           <div className={styles.left}>
-            <h3>我的问卷</h3>
+            <Title level={2}>我的问卷</Title>
           </div>
           <div className={styles.right}>收索</div>
       </div>
