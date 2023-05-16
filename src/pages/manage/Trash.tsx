@@ -50,7 +50,7 @@ export default function Trash() {
     confirm({
       title: '确认彻底删除',
       icon: <ExclamationCircleOutlined/>,
-      content: '删除了就彻底没了',
+      content: '删除了就彻底没了，学不动了',
       onOk: ()=>{
         console.log('del yes')
       }
