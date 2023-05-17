@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
 import { Typography } from "antd"
+import ListSearch from '../../components/ListSearch';
 
 const { Title } = Typography;
 
@@ -30,7 +31,9 @@ export default function List() {
           <div className={styles.left}>
             <Title level={2}>我的问卷</Title>
           </div>
-          <div className={styles.right}>收索</div>
+          <div className={styles.right}>
+            <ListSearch></ListSearch>
+          </div>
       </div>
       <div className={styles.content}>
         {questionList.length > 0 && questionList.map(item => {
