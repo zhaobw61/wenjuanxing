@@ -2,6 +2,7 @@ import { Empty, Typography, Table, Tag, Button, Space, Modal } from "antd"
 import React, { useState } from 'react'
 import styles from './common.module.less'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import ListSearch from "../../components/ListSearch";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -62,7 +63,9 @@ export default function Trash() {
           <div className={styles.left}>
             <Title level={2}>我的问卷</Title>
           </div>
-          <div className={styles.right}>收索</div>
+          <div className={styles.right}>
+            <ListSearch></ListSearch>
+          </div>
       </div>
       <div className={styles.content}>
         {questionList.length === 0 && <Empty/>}

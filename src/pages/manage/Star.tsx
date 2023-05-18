@@ -2,6 +2,7 @@ import { useState } from 'react'
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
 import { Empty, Typography } from "antd"
+import ListSearch from '../../components/ListSearch';
 
 const { Title } = Typography;
 
@@ -29,7 +30,9 @@ export default function Star() {
           <div className={styles.left}>
             <Title level={2}>星标问卷</Title>
           </div>
-          <div className={styles.right}>收索</div>
+          <div className={styles.right}>
+            <ListSearch></ListSearch>
+          </div>
       </div>
       <div className={styles.content}>
         {questionList.length === 0 && <Empty/>}
