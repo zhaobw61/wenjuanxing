@@ -31,7 +31,10 @@ export default function Register() {
           <Form.Item 
             label="用户名"
             name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[
+              { required: true, message: 'Please input your username!' },
+              { type: 'string', min: 5, max: 20, message: '长度需要5～20之间' }
+            ]}
           >
             <Input />
           </Form.Item>
@@ -45,6 +48,7 @@ export default function Register() {
           <Form.Item
             label="确认密码"
             name="confrim"
+            dependencies={['password']}
             rules={[{ required: true, message: '请确认密码' }]}
           >
             <Input.Password />
