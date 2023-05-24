@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
 import { Typography } from "antd"
@@ -25,6 +25,15 @@ export default function List() {
       createdAt: '20330202'
     }
   ])
+  useEffect(() => {
+    fetch('/api/test',{
+      method: 'get'
+    }).then((data) => {
+      return data.text()
+    }).then((res) => {
+      console.log(res)
+    })
+  }, [])
   return (
     <>
       <div className={styles.header}>
