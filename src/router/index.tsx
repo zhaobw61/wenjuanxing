@@ -9,8 +9,8 @@ import List from '../pages/manage/List'
 import Star from "../pages/manage/Star";
 import Trash from "../pages/manage/Trash";
 import QuestionLayout from "../layouts/QuestionLayout";
-import Edit from "../pages/question/Edit";
-import Stat from "../pages/question/Stat";
+import Edit from "../pages/question/Edit/index";
+import Stat from "../pages/question/Stat/index";
 
 const router = createBrowserRouter([
   {
