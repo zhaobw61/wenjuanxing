@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom'
 import useLoadQuestionData from '../../../hooks/useLoadQuestionData'
 
 export default function Edit() {
-  const {loading, questionData} = useLoadQuestionData();
+  const {loading, data} = useLoadQuestionData();
   return (
     <div>
       <p>Edit page</p>
       <div>
-        { loading ? <div>loading</div> : <div>{JSON.stringify(questionData)}</div>}
+        { loading ? <div>loading</div> : <div>{JSON.stringify(data)}</div>}
       </div>
     </div>
   )

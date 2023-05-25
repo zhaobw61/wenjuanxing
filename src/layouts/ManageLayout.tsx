@@ -4,21 +4,29 @@ import { PlusOutlined, BarsOutlined, StarOutlined, DeleteOutlined } from '@ant-d
 import { createQuestionService } from '../services/question'
 import styles from './index.module.less'
 import { useState } from 'react'
+import { useRequest } from 'ahooks'
 
 export default function ManageLayout() {
   const nav = useNavigate();
-  const [loading, setLoading] = useState(false);
   const { pathname } = useLocation();
-  async function handleCreateCLick() {
-    setLoading(true)
-    const data = await createQuestionService();
-    const { id } = data || {};
-    if(id) {
-      nav(`/question/edit/${id}`)
+  // async function handleCreateCLick() {
+  //   setLoading(true)
+  //   const data = await createQuestionService();
+  //   const { id } = data || {};
+  //   if(id) {
+  //     nav(`/question/edit/${id}`)
+  //     message.success('创建问卷成功');
+  //   }
+  //   setLoading(false)
+  // }
+  const { loading, run: handleCreateCLick } = useRequest(createQuestionService, {
+    manual: true,
+    onSuccess(result) {
+      nav(`/question/edit/${result.id}`);
       message.success('创建问卷成功');
     }
-    setLoading(false)
-  }
+  })
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
