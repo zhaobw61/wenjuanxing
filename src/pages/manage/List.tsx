@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useTitle, useRequest } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
-import { Typography } from "antd"
+import { Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
+import { getQuestionListService } from '../../services/question';
 
 const { Title } = Typography;
 
 
 export default function List() {
-  const [questionList, setQuestionList] = useState([
-    { 
-      _id: '123',
-      title: 'boooo',
-      isStar: false,
-      isPublished: false,
-      answerCount: 123,
-      createdAt: '20230202'
-    },{ 
-      _id: '333',
-      title: 'b333',
-      isStar: false,
-      isPublished: false,
-      answerCount: 33123,
-      createdAt: '20330202'
-    }
-  ])
+  useTitle('小幕问卷 - 我的问卷')
+
+  const { data = {}, loading } = useRequest(getQuestionListService)
+  const { list = [], total = 0 } = data;
+  
   useEffect(() => {
     fetch('/api/test',{
       method: 'get'
@@ -45,8 +35,11 @@ export default function List() {
           </div>
       </div>
       <div className={styles.content}>
-        {questionList.length > 0 && questionList.map(item => {
-          return <QuestionCard {...item} key={item._id}/>
+        { loading && <div style={{textAlign:'center'}}>
+          <Spin/>
+        </div> }
+        {!loading && list.length > 0 && list.map((q:any) => {
+          return <QuestionCard key={q._id} {...q} />
         })}
       </div>
       <div className={styles.footer}>记载更多</div>
