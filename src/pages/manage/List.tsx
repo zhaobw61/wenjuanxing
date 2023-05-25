@@ -5,6 +5,8 @@ import styles from './common.module.less'
 import { Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
 import { getQuestionListService } from '../../services/question';
+import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
+
 
 const { Title } = Typography;
 
@@ -12,18 +14,9 @@ const { Title } = Typography;
 export default function List() {
   useTitle('小幕问卷 - 我的问卷')
 
-  const { data = {}, loading } = useRequest(getQuestionListService)
+  const { data = {}, loading } = useLoadQuestionListData()
   const { list = [], total = 0 } = data;
-  
-  useEffect(() => {
-    fetch('/api/test',{
-      method: 'get'
-    }).then((data) => {
-      return data.text()
-    }).then((res) => {
-      console.log(res)
-    })
-  }, [])
+
   return (
     <>
       <div className={styles.header}>
