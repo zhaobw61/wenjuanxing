@@ -1,29 +1,17 @@
-import { useState } from 'react'
+import { useTitle } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
-import { Empty, Typography } from "antd"
+import { Empty, Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
+import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
 
 const { Title } = Typography;
 
 export default function Star() {
-  const [questionList, setQuestionList] = useState([
-    { 
-      _id: '123',
-      title: 'boooo',
-      isStar: false,
-      isPublished: false,
-      answerCount: 123,
-      createdAt: '20230202'
-    },{ 
-      _id: '333',
-      title: 'b333',
-      isStar: true,
-      isPublished: false,
-      answerCount: 33123,
-      createdAt: '20330202'
-    }
-  ])
+  useTitle('小幕问卷 - 星标问卷')
+
+  const { data = {}, loading } = useLoadQuestionListData({isStar: true})
+  const { list = [], total = 0 } = data;
   return (
     <>
       <div className={styles.header}>
@@ -35,8 +23,11 @@ export default function Star() {
           </div>
       </div>
       <div className={styles.content}>
-        {questionList.length === 0 && <Empty/>}
-        {questionList.length > 0 && questionList.map(item => {
+        { loading && <div style={{textAlign:'center'}}>
+          <Spin/>
+        </div> }
+        {!loading &&list.length === 0 && <Empty/>}
+        {list.length > 0 && list.map((item:any) => {
           return <QuestionCard {...item} key={item._id}/>
         })}
       </div>

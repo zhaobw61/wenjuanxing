@@ -1,30 +1,20 @@
-import { Empty, Typography, Table, Tag, Button, Space, Modal } from "antd"
+import { useTitle } from 'ahooks';
+import { Empty, Typography, Table, Tag, Button, Space, Modal, Spin } from "antd"
 import React, { useState } from 'react'
 import styles from './common.module.less'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from "../../components/ListSearch";
+import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
 
 const { Title } = Typography;
 const { confirm } = Modal;
 
 export default function Trash() {
-  const [questionList, setQuestionList] = useState([
-    { 
-      _id: '123',
-      title: 'boooo',
-      isStar: false,
-      isPublished: false,
-      answerCount: 123,
-      createdAt: '20230202'
-    },{ 
-      _id: '333',
-      title: 'b333',
-      isStar: true,
-      isPublished: false,
-      answerCount: 33123,
-      createdAt: '20330202'
-    }
-  ])
+  useTitle('小幕问卷 - 删除问卷')
+
+  const { data = {}, loading } = useLoadQuestionListData({isStar: true})
+  const { list = [], total = 0 } = data;
+
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const tableColumns = [
     {
@@ -68,8 +58,11 @@ export default function Trash() {
           </div>
       </div>
       <div className={styles.content}>
-        {questionList.length === 0 && <Empty/>}
-        {questionList.length > 0 && (
+        { loading && <div style={{textAlign:'center'}}>
+          <Spin/>
+          </div> }
+        {!loading && list.length === 0 && <Empty/>}
+        {!loading && list.length > 0 && (
           <>
             <div style={{ marginBottom: '16px'}}>
               <Space>
@@ -80,7 +73,7 @@ export default function Trash() {
               </Space>
             </div>
             <Table
-              dataSource={questionList}
+              dataSource={list}
               columns={tableColumns}
               pagination={false}
               rowKey={(q) => {

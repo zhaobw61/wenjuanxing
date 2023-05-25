@@ -14,7 +14,7 @@ const { Title } = Typography;
 export default function List() {
   useTitle('小幕问卷 - 我的问卷')
 
-  const { data = {}, loading } = useLoadQuestionListData()
+  const { data = {}, loading } = useLoadQuestionListData({})
   const { list = [], total = 0 } = data;
 
   return (
