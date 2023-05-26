@@ -1,17 +1,18 @@
 import { useTitle } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
-import { Empty, Spin, Typography } from "antd"
+import { Empty, Pagination, Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
+import ListPage from '../../components/ListPage';
 
 const { Title } = Typography;
 
 export default function Star() {
   useTitle('小幕问卷 - 星标问卷')
-
   const { data = {}, loading } = useLoadQuestionListData({isStar: true})
   const { list = [], total = 0 } = data;
+  console.log('once')
   return (
     <>
       <div className={styles.header}>
@@ -31,7 +32,9 @@ export default function Star() {
           return <QuestionCard {...item} key={item._id}/>
         })}
       </div>
-      <div className={styles.footer}>加载更多</div>
+      <div className={styles.footer}>
+        <ListPage current={1} total={total}/>
+      </div>
     </>
   )
 } 

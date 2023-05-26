@@ -12,8 +12,10 @@ function useLoadQuestionListData(opt: Partial<OptionType>) {
   const [ searchParams ] = useSearchParams();
   const {data, loading, error } = useRequest(async ()=> {
     const keyword = searchParams.get('keyword') || '';
+    const page =  parseInt(searchParams.get('page') || '') || 1;
+    const pageSize =  parseInt(searchParams.get('pageSize') || '') || 10;
 
-    const data = await getQuestionListService({keyword, isStar, isDeleted})
+    const data = await getQuestionListService({keyword, isStar, isDeleted, page, pageSize})
     return data;
   },{
     refreshDeps: [searchParams] // 刷新的依赖项

@@ -16,7 +16,6 @@ type PropsType = {
 }
 
 const QuestionCard: FC<PropsType> = (props: PropsType) => {
-  console.log('asd');
   const { _id, title, createdAt, answerCount, isPublished, isStar } = props;
   const nav = useNavigate();
   const duplicate = () => {

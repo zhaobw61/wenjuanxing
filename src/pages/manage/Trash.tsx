@@ -5,6 +5,7 @@ import styles from './common.module.less'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from "../../components/ListSearch";
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
+import ListPage from '../../components/ListPage';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -91,7 +92,9 @@ export default function Trash() {
         ) 
         }
       </div>
-      <div className={styles.footer}>记载更多</div>
+      <div className={styles.footer}>
+        <ListPage current={1} total={total}/>
+      </div>
     </>
   )
 }
