@@ -12,7 +12,6 @@ export default function Star() {
   useTitle('小幕问卷 - 星标问卷')
   const { data = {}, loading } = useLoadQuestionListData({isStar: true})
   const { list = [], total = 0 } = data;
-  console.log('once')
   return (
     <>
       <div className={styles.header}>

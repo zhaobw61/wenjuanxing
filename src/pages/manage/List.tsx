@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useTitle, useRequest } from 'ahooks';
+import React, { useEffect, useRef, useState } from 'react';
+import { useTitle, useRequest, useDebounceFn } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
 import { Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
 import { getQuestionListService } from '../../services/question';
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
+import { useSearchParams } from 'react-router-dom';
 
 
 const { Title } = Typography;
@@ -14,8 +15,61 @@ const { Title } = Typography;
 export default function List() {
   useTitle('小幕问卷 - 我的问卷')
 
-  const { data = {}, loading } = useLoadQuestionListData({})
-  const { list = [], total = 0 } = data;
+  const [page, setPage] = useState(1);
+  const [list, setList] = useState([]);
+  const [total, setTotal] = useState(0);
+  const haveMoreData = total > list.length;
+
+  const [searchParams] = useSearchParams();
+
+  // 请求数据
+  const { run: load, loading } = useRequest(async () =>{
+    const data = await getQuestionListService({
+      page:1,
+      pageSize:10,
+      keyword: searchParams.get('keyword')|| ''
+    })
+    return data
+  },{
+    manual: true,
+    onSuccess(result) {
+      const { list:l = [], total = 0 } = result;
+      setList(list.concat(l)) // 累计
+      setTotal(total)
+      setPage(page + 1)
+    }
+  })
+
+  // 触发加载 - 防抖
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { run: tryLoadMore } = useDebounceFn(
+    () => {
+      const elem = containerRef.current;
+      if(elem == null) return
+      const domRect = elem.getBoundingClientRect();
+      if(domRect == null) return
+      const { bottom } = domRect;
+      if(bottom <= document.body.clientHeight) {
+        load();
+      }
+    },
+    {
+      wait: 1000
+    }
+  )
+
+  useEffect(() => {
+    tryLoadMore();
+  }, [searchParams])
+
+  useEffect(() => {
+    if(haveMoreData) {
+      window.addEventListener('scroll', tryLoadMore)
+    }
+    return () => {
+      window.removeEventListener('scroll', tryLoadMore)
+    }
+  }, [searchParams, haveMoreData])
 
   return (
     <>
@@ -35,7 +89,9 @@ export default function List() {
           return <QuestionCard key={q._id} {...q} />
         })}
       </div>
-      <div className={styles.footer}>记载更多</div>
+      <div className={styles.footer}>
+        <div ref={containerRef}>上滑加载更多</div>
+      </div>
     </>
   )
 }
