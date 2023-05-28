@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTitle, useRequest, useDebounceFn } from 'ahooks';
 import QuestionCard from '../../components/QuestionCard'
 import styles from './common.module.less'
-import { Spin, Typography } from "antd"
+import { Empty, Spin, Typography } from "antd"
 import ListSearch from '../../components/ListSearch';
 import { getQuestionListService } from '../../services/question';
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
 import { useSearchParams } from 'react-router-dom';
+import { start } from 'repl';
 
 
 const { Title } = Typography;
@@ -15,12 +16,22 @@ const { Title } = Typography;
 export default function List() {
   useTitle('小幕问卷 - 我的问卷')
 
+  const [started, setStarted] = useState(false);
   const [page, setPage] = useState(1);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const haveMoreData = total > list.length;
 
   const [searchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword') || ''
+
+  // keyword 变化的时候，重制信息
+  useEffect(() => {
+    setStarted(false)
+    setPage(1)
+    setList([])
+    setTotal(0)
+  }, [keyword])
 
   // 请求数据
   const { run: load, loading } = useRequest(async () =>{
@@ -50,7 +61,8 @@ export default function List() {
       if(domRect == null) return
       const { bottom } = domRect;
       if(bottom <= document.body.clientHeight) {
-        load();
+        load(); // 真的加载数据
+        setStarted(true);
       }
     },
     {
@@ -71,6 +83,14 @@ export default function List() {
     }
   }, [searchParams, haveMoreData])
 
+  const loadMoreContentElem = useMemo(() => {
+    if(!started || !loading)  return <Spin />
+
+    if(total === 0) return <Empty description="暂无数据" />
+    if(!haveMoreData) return <span>没有更多了 ...</span>
+    return <span>开始加载下一页</span>
+  }, [started, loading, haveMoreData]) 
+
   return (
     <>
       <div className={styles.header}>
@@ -82,15 +102,12 @@ export default function List() {
           </div>
       </div>
       <div className={styles.content}>
-        { loading && <div style={{textAlign:'center'}}>
-          <Spin/>
-        </div> }
-        {!loading && list.length > 0 && list.map((q:any) => {
+        {list.length > 0 && list.map((q:any) => {
           return <QuestionCard key={q._id} {...q} />
         })}
       </div>
       <div className={styles.footer}>
-        <div ref={containerRef}>上滑加载更多</div>
+        <div ref={containerRef}>{loadMoreContentElem}</div>
       </div>
     </>
   )
