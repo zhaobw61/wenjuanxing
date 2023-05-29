@@ -1,8 +1,10 @@
-import { Button, Space, Divider, Tag, Popconfirm, Modal } from 'antd'
+import { Button, Space, Divider, Tag, Popconfirm, Modal, message } from 'antd'
 import { useNavigate, Link } from "react-router-dom";
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import styles from './QuestionCard.module.less'
 import { EditOutlined, LineChartOutlined, StarOutlined, CopyOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
+import { updateQuestionService, duplicateQuestionService } from '../services/question';
 
 const { confirm } = Modal;
 
@@ -16,10 +18,36 @@ type PropsType = {
 }
 
 const QuestionCard: FC<PropsType> = (props: PropsType) => {
-  const { _id, title, createdAt, answerCount, isPublished, isStar } = props;
   const nav = useNavigate();
-  const duplicate = () => {
-  }
+  const { _id, title, createdAt, answerCount, isPublished, isStar } = props;
+  
+  // 修改 标星
+  const [isStartState, setIsStartState] = useState(isStar)
+
+  const { loading: changeStarLoading, run: changeStar } = useRequest(async () => {
+    await updateQuestionService(_id, { isStar: !isStartState })
+  }, {
+    manual: true,
+    onSuccess() {
+      setIsStartState(!isStartState) // 更新state
+      message.success('已设置')
+    }
+  })
+
+  const { loading: duplicateLoading, run: duplicate } = useRequest(
+    async () => {
+      const data = await duplicateQuestionService(_id);
+      return data;
+    },
+    {
+      manual: true,
+      onSuccess(result:any) {
+        message.success('复制成功')
+        nav(`/question/edit/${result.id}`)
+      }
+    }
+  )
+  
   function del() {
     confirm({
       title: '确认要删除？',
@@ -27,6 +55,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
+        
       }
     })
   }
@@ -53,8 +82,12 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       <div className={styles['button-container']}>
         <div className={styles.left}>
           <Space>
-            <Button icon={<EditOutlined />} type="text" size="small" onClick={() => {
-              nav(`/question/edit/${_id}`)
+            <Button
+              icon={<EditOutlined />}
+              type="text"
+              size="small"
+              onClick={() => {
+                nav(`/question/edit/${_id}`)
             }}>编辑问卷</Button>
             <Button
               icon={<LineChartOutlined />}
@@ -68,8 +101,14 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
         </div>
         <div className={styles.right}>
           <Space>
-            <Button icon={<StarOutlined />} type="text" size="small">
-              { isStar ? '取消标星' : '标星' }
+            <Button
+              icon={<StarOutlined />}
+              type="text"
+              size="small"
+              onClick={changeStar}
+              disabled={changeStarLoading}
+            >
+              { isStartState ? '取消标星' : '标星' }
             </Button>
             <Popconfirm
               title="确定复制该问卷？"
