@@ -12,6 +12,7 @@ type PropsType = {
   _id: string
   title: string
   isStar: boolean
+  isDeleted: boolean
   isPublished: boolean
   answerCount: number
   createdAt:string
@@ -19,10 +20,11 @@ type PropsType = {
 
 const QuestionCard: FC<PropsType> = (props: PropsType) => {
   const nav = useNavigate();
-  const { _id, title, createdAt, answerCount, isPublished, isStar } = props;
+  const { _id, title, createdAt, answerCount, isPublished, isStar, isDeleted  } = props;
   
   // 修改 标星
   const [isStartState, setIsStartState] = useState(isStar)
+  const [isDeletedState, setIsDeletedState] = useState(isDeleted)
 
   const { loading: changeStarLoading, run: changeStar } = useRequest(async () => {
     await updateQuestionService(_id, { isStar: !isStartState })
@@ -47,6 +49,25 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       }
     }
   )
+
+  // 删除
+  const {loading: deleteLoading, run: deleteQuestion } = useRequest(
+    async () => {
+      const data = await updateQuestionService(_id, { isDeleted: true });
+      return data;
+    },
+    {
+      manual: true,
+      onSuccess() {
+        message.success('删除成功')
+        setIsDeletedState(true)
+      }
+    }
+  )
+
+  // 不显示删除
+  if(isDeletedState) return null
+
   
   function del() {
     confirm({
@@ -54,9 +75,7 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
       icon: <ExclamationCircleOutlined/>,
       okText: '确认',
       cancelText: '取消',
-      onOk: () => {
-        
-      }
+      onOk: deleteQuestion
     })
   }
   return (
@@ -116,9 +135,9 @@ const QuestionCard: FC<PropsType> = (props: PropsType) => {
               cancelText="取消"
               onConfirm={duplicate}
             >
-              <Button icon={<CopyOutlined />} type="text" size="small" >复制</Button>
+              <Button icon={<CopyOutlined />} type="text" size="small">复制</Button>
             </Popconfirm>
-            <Button icon={<DeleteOutlined />} type="text" size="small" onClick={del}>删除</Button>
+            <Button icon={<DeleteOutlined />} type="text" size="small" onClick={del} disabled={deleteLoading}>删除</Button>
           </Space>
         </div>
       </div>
