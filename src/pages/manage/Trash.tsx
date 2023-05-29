@@ -6,7 +6,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from "../../components/ListSearch";
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
 import ListPage from '../../components/ListPage';
-import { updateQuestionService } from '../../services/question';
+import { deleteQuestionService, updateQuestionService } from '../../services/question';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -53,15 +53,25 @@ export default function Trash() {
       refresh(); // 手动刷新列表
     }
   })
+
+  const {run: deleteQuestion} = useRequest(async () => {
+    const data = deleteQuestionService(selectedIds)
+    return data;
+  },{
+    manual: true,
+    onSuccess() {
+      message.success('删除成功');
+      refresh();
+      setSelectedIds([])
+    }
+  })
   
   function del() {
     confirm({
       title: '确认彻底删除',
       icon: <ExclamationCircleOutlined/>,
       content: '删除了就彻底没了，学不动了',
-      onOk: ()=>{
-        console.log('del yes')
-      }
+      onOk: deleteQuestion
     });
   }
   return (
