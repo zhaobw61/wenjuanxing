@@ -1,11 +1,12 @@
-import { useTitle } from 'ahooks';
-import { Empty, Typography, Table, Tag, Button, Space, Modal, Spin } from "antd"
+import { useTitle, useRequest } from 'ahooks';
+import { Empty, Typography, Table, Tag, Button, Space, Modal, Spin, message } from "antd"
 import React, { useState } from 'react'
 import styles from './common.module.less'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ListSearch from "../../components/ListSearch";
 import useLoadQuestionListData from '../../hooks/useLoadQuestionListData';
 import ListPage from '../../components/ListPage';
+import { updateQuestionService } from '../../services/question';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -13,7 +14,7 @@ const { confirm } = Modal;
 export default function Trash() {
   useTitle('小幕问卷 - 删除问卷')
 
-  const { data = {}, loading } = useLoadQuestionListData({isStar: true})
+  const { data = {}, loading, refresh } = useLoadQuestionListData({isStar: true})
   const { list = [], total = 0 } = data;
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -38,6 +39,21 @@ export default function Trash() {
       dataIndex: 'createdAt'
     }
   ]
+
+  // 恢复
+  const { run: recover } = useRequest(async () => {
+    for await (const id of selectedIds) {
+      await updateQuestionService(id, { isDeleted: false })
+    }
+  }, {
+    manual: true,
+    debounceMaxWait: 500,
+    onSuccess() {
+      message.success('恢复成功')
+      refresh(); // 手动刷新列表
+    }
+  })
+  
   function del() {
     confirm({
       title: '确认彻底删除',
@@ -68,7 +84,7 @@ export default function Trash() {
             <div style={{ marginBottom: '16px'}}>
               <Space>
                 <Button type="primary" disabled={selectedIds.length === 0} onClick={() => {
-                  
+                  recover()
                 }}>恢复</Button>
                 <Button disabled={selectedIds.length === 0} danger onClick={del}>彻底删除</Button>
               </Space>
