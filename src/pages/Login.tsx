@@ -1,8 +1,11 @@
-import { Button, Checkbox, Form, Input, Space, Typography } from "antd";
+import { Button, Checkbox, Form, Input, Space, Typography, message } from "antd";
 import { UserAddOutlined } from '@ant-design/icons';
 import styles from './Register.module.less'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { loginService } from "../services/user";
+import { useRequest } from 'ahooks';
+import { setToken, getToken, removeToken } from "../utils/user-token";
 
 const { Title } = Typography;
 
@@ -29,13 +32,28 @@ function getUserInfoFromStorage() {
 
 export default function Login() {
   const [ form ] = Form.useForm(); // 第三方的 hook
+  const nav = useNavigate();
   useEffect(() => {
     const { username, password } = getUserInfoFromStorage()
     form.setFieldsValue({ username, password })
   }, [])
   
+  const { run } = useRequest(async (username : string, password : string) => {
+    const data = await loginService(username, password)
+    return data;
+  }, {
+    manual: true,
+    onSuccess(result) {
+      const { token = "" } = result;
+      setToken(token)
+      message.success('登录成功');
+      nav('/manage/list')
+    }
+  })
+
   const onFinish = (values : any) => {
     const { username, password, remember } = values;
+    run(username, password)
     if(remember) {
       remenberUser(username, password);
     } else {
