@@ -1,18 +1,23 @@
-import { useRequest } from 'ahooks';
 import { Link, useNavigate } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'; 
-import { getUserInfoService } from '../services/user';
+import { useDispatch }  from 'react-redux'
 import { Button } from 'antd';
 import { removeToken } from '../utils/user-token';
+import useGetUserInfo from '../hooks/useGetUserInfo';
+import { logoutReducer } from '../store/userReducer'
 
 export default function UserInfo() {
   const nav = useNavigate();
-  const { data } = useRequest(async() => {
-    const data = await getUserInfoService()
-    return data;
-  })
-  const { username, nickname } = data || {};
+  const dispatch = useDispatch();
+  // const { data } = useRequest(async() => {
+  //   const data = await getUserInfoService()
+  //   return data;
+  // })
+  // const { username, nickname } = data || {};
+  const { userName: username, nickName: nickname} = useGetUserInfo()
+  console.log('---', JSON.stringify(logoutReducer()))
   function logout() {
+    dispatch(logoutReducer())
     removeToken() // clear token
     nav('/login')
   }
