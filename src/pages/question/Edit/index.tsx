@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react'
 import { getQuestionService } from '../../../services/question'
 import { useParams } from 'react-router-dom'
 import useLoadQuestionData from '../../../hooks/useLoadQuestionData'
+import styles from './index.module.less'
 
 export default function Edit() {
   const {loading, data} = useLoadQuestionData();
   return (
-    <div>
-      <p>Edit page</p>
-      <div>
-        { loading ? <div>loading</div> : <div>{JSON.stringify(data)}</div>}
+    <div className={styles.container}>
+      <div style={{height:'50px', backgroundColor:'#fff'}}>Header</div>
+      <div className={styles['content-wrapper']}>
+        <div className={styles.content}>
+          <div className={styles.left}>Left</div>
+          <div className={styles.main}>
+            <div className={styles['canvas-wrapper']}>
+              <div style={{height: '900px'}}>滚动测试</div>
+            </div>
+          </div>
+          <div className={styles.right}>Right</div>
+        </div>
       </div>
     </div>
   )

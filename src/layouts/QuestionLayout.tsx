@@ -8,7 +8,7 @@ export default function QuestionLayout() {
   useNavPage(waitingUserData);
   return (
     <div>
-      <p>question Layout</p>
+      {/* <p>question Layout</p> */}
       <div>
         { waitingUserData ?(
             <div style={{textAlign: 'center', marginTop: '60px'}}>
