@@ -3,6 +3,7 @@ import { getQuestionService } from '../../../services/question'
 import { useParams } from 'react-router-dom'
 import useLoadQuestionData from '../../../hooks/useLoadQuestionData'
 import styles from './index.module.less'
+import EditCanvas from './EditCanvas'
 
 export default function Edit() {
   const {loading, data} = useLoadQuestionData();
@@ -14,7 +15,7 @@ export default function Edit() {
           <div className={styles.left}>Left</div>
           <div className={styles.main}>
             <div className={styles['canvas-wrapper']}>
-              <div style={{height: '900px'}}>滚动测试</div>
+              <EditCanvas />
             </div>
           </div>
           <div className={styles.right}>Right</div>
