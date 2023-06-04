@@ -73,3 +73,15 @@ export default router;
 export const HOME_PATHNAME = '/'
 export const LOGIN_PATHNAME = '/login'
 export const REGISTER_PATHNAME = '/register'
+export const MANAGR_INDEX_PATHNAME = '/manage/list'
+
+// 判断是不是登录页或者注册页
+export function isLoginOrRegister(pathname: string) {
+  if([LOGIN_PATHNAME, REGISTER_PATHNAME].includes(pathname)) return true
+  return false;
+}
+// 不需要用户信息的页面
+export function isNoNeedUserInfo(pathname: string) {
+  if([HOME_PATHNAME, LOGIN_PATHNAME, REGISTER_PATHNAME].includes(pathname)) return true
+  return false
+}
