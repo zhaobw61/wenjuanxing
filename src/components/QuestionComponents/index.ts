@@ -1,6 +1,24 @@
-import { QuestionInputPropsType } from "./QuestionInput";
-import { QuestionTitlePropsType } from "./QuestionTitle";
+import type { FC } from 'react';
+import QuestionInputConf, { QuestionInputPropsType } from "./QuestionInput/index";
+import QuestionTitleConf, { QuestionTitlePropsType } from "./QuestionTitle";
 
 // 各个组件的 prop type
-export type ComponentPropsType = QuestionInputPropsType | QuestionTitlePropsType
+export type ComponentPropsType = QuestionInputPropsType & QuestionTitlePropsType
 
+// 组件配置
+export type ComponentConfType = {
+  title: string
+  type: string
+  Component: FC<ComponentPropsType>
+  defaultProps: ComponentPropsType
+}
+
+// 全部组件配置列表
+const ComponentConfList: ComponentConfType[] = [
+  QuestionInputConf,
+  QuestionTitleConf
+]
+
+export function getComponentConfByType(type: string) {
+  return ComponentConfList.find(c => c.type === type)
+}
