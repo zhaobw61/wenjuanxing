@@ -6,7 +6,7 @@ import styles from './index.module.less'
 import EditCanvas from './EditCanvas'
 
 export default function Edit() {
-  const {loading, data} = useLoadQuestionData();
+  const {loading} = useLoadQuestionData();
   return (
     <div className={styles.container}>
       <div style={{height:'50px', backgroundColor:'#fff'}}>Header</div>
@@ -15,7 +15,7 @@ export default function Edit() {
           <div className={styles.left}>Left</div>
           <div className={styles.main}>
             <div className={styles['canvas-wrapper']}>
-              <EditCanvas />
+              <EditCanvas loading={loading}/>
             </div>
           </div>
           <div className={styles.right}>Right</div>
