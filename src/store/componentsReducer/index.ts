@@ -9,10 +9,12 @@ export type ComponentInfoType = {
 }
 
 export type ComponentStateType = {
+  selectedId: string
   componentList: Array<ComponentInfoType>
 }
 
 const INIT_STATE: ComponentStateType = {
+  selectedId: '',
   componentList: []
 }
 
@@ -23,6 +25,10 @@ export const componentsSlice = createSlice({
     // 重制所有组件
     resetComponents: (state: ComponentStateType, action: PayloadAction<ComponentStateType>) => {
       return action.payload 
+    },
+    // 修改 selectedId
+    changeSelectedId: (state: ComponentStateType, action: PayloadAction<string>) => {
+      return {...state, selectedId: action.payload }
     }
   }
 });
@@ -30,6 +36,6 @@ export const componentsSlice = createSlice({
 // console.log('componentsSlice.actions', componentsSlice.actions.resetComponents)
 // console.log('componentsSlice.reducer', componentsSlice.reducer)
 
-export const { resetComponents } = componentsSlice.actions;
+export const { resetComponents, changeSelectedId } = componentsSlice.actions;
 
 export default componentsSlice.reducer;
