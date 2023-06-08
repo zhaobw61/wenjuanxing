@@ -1,6 +1,7 @@
 export type QuestionInputPropsType = {
   title?: string
   placeholder?: string
+  onChange?: (newProp: QuestionInputPropsType) => void
 }
 
 export const QuestionInputDefalutProps: QuestionInputPropsType = {
