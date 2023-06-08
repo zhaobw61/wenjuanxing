@@ -11,7 +11,7 @@ const PropComponent: FC<QuestionTitlePropsType> = (props: QuestionTitlePropsType
     form.setFieldsValue({ text, level, isCenter})
   }, [ text, level, isCenter])
 
-  function handleValueChange() {
+  function handleValuesChange() {
     if(onChange) {
       onChange(form.getFieldsValue())
     }
@@ -23,6 +23,7 @@ const PropComponent: FC<QuestionTitlePropsType> = (props: QuestionTitlePropsType
     layout="vertical"
     initialValues={{ text, level, isCenter}}
     form = {form}
+    onValuesChange={handleValuesChange}
   >
     <Form.Item label="标题内容" name="text" rules={[{ required: true, message: '请输入标题内容' }]}>
       <Input />
