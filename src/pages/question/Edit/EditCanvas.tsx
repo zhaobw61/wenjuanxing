@@ -39,7 +39,7 @@ const EditCanvas: FC<PropsType> = ({loading}) => {
   return (
     <div className={styles.canvas}>
       {
-        componentList.map(c => {
+        componentList.filter(c => !c.isHidden).map(c => {
           const { fe_id } = c;
           
           // 拼接className
