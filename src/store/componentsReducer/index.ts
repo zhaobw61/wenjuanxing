@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ComponentPropsType } from "../../components/QuestionComponents";
 import { getNextSelectedId } from './utils';
+import cloneDeep from "lodash.clonedeep";
+import { nanoid } from "nanoid";
 
 export type ComponentInfoType = {
   fe_id: string 
@@ -14,11 +16,13 @@ export type ComponentInfoType = {
 export type ComponentStateType = {
   selectedId: string
   componentList: Array<ComponentInfoType>
+  copiedComponent?: ComponentInfoType | null
 }
 
 const INIT_STATE: ComponentStateType = {
   selectedId: '',
-  componentList: []
+  componentList: [],
+  copiedComponent: null
 }
 
 export const componentsSlice = createSlice({
@@ -48,7 +52,7 @@ export const componentsSlice = createSlice({
         newComponentList.splice(index + 1, 0, newComponent)
       }
 
-      return {selectedId: newComponent.fe_id, componentList: newComponentList}
+      // return {selectedId: newComponent.fe_id, componentList: newComponentList}
     },
 
     // 修改组件
@@ -101,6 +105,24 @@ export const componentsSlice = createSlice({
       if(curComp) {
         curComp.isLocked = !curComp.isLocked;
       }
+    },
+
+    // 拷贝当前的选中的组件
+    copySelectedComponent:(draft: ComponentStateType) => {
+      const {selectedId, componentList = []} = draft
+      const selectedComponent = componentList.find(c => c.fe_id === selectedId)
+      if(selectedComponent == null) return
+      draft.copiedComponent = cloneDeep(selectedComponent)
+    },
+
+    // 粘贴
+    pasteCopiedComponent: (draft: ComponentStateType) => {
+      const { copiedComponent } = draft
+      if(copiedComponent == null) return
+      
+      copiedComponent.fe_id = nanoid()
+
+      draft.componentList.push(copiedComponent)
     }
   }
 });
@@ -112,7 +134,9 @@ export const {
   changeComponentProps, 
   removeSelectedComponent, 
   changeComponentHidden, 
-  toggleComponentLocked
+  toggleComponentLocked,
+  copySelectedComponent,
+  pasteCopiedComponent
 } = componentsSlice.actions;
 
 export default componentsSlice.reducer;
