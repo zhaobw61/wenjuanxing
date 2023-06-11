@@ -123,6 +123,24 @@ export const componentsSlice = createSlice({
       copiedComponent.fe_id = nanoid()
 
       draft.componentList.push(copiedComponent)
+    },
+    // 选中上一个
+    selectPrevComponent: (draft: ComponentStateType) => {
+      const { selectedId, componentList } = draft;
+      const selectedIndex = componentList.findIndex(c => c.fe_id === selectedId)
+      if(selectedIndex < 0) return
+      if(selectedIndex <= 0) return  
+
+      draft.selectedId = componentList[selectedIndex - 1].fe_id
+    },
+    // 选中下一个
+    selectNextComponent: (draft: ComponentStateType) => {
+      const { selectedId, componentList } = draft;
+      const selectedIndex = componentList.findIndex(c => c.fe_id === selectedId)
+      if(selectedIndex < 0) return
+      if(selectedIndex +1 === componentList.length) return  
+
+      draft.selectedId = componentList[selectedIndex + 1].fe_id
     }
   }
 });
@@ -136,7 +154,9 @@ export const {
   changeComponentHidden, 
   toggleComponentLocked,
   copySelectedComponent,
-  pasteCopiedComponent
+  pasteCopiedComponent,
+  selectPrevComponent,
+  selectNextComponent
 } = componentsSlice.actions;
 
 export default componentsSlice.reducer;
