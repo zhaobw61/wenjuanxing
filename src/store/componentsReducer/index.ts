@@ -52,7 +52,7 @@ export const componentsSlice = createSlice({
         newComponentList.splice(index + 1, 0, newComponent)
       }
 
-      // return {selectedId: newComponent.fe_id, componentList: newComponentList}
+      return {selectedId: newComponent.fe_id, componentList: newComponentList}
     },
 
     // 修改组件
