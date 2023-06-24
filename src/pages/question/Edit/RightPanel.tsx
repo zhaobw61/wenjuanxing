@@ -1,9 +1,17 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Tabs } from 'antd'
 import { FileTextOutlined, SettingOutlined } from '@ant-design/icons';
 import ComponentProp from './ComponentProp';
+import PageSetting from './PageSetting';
+import useGetComponentInfo from '../../../hooks/useGetComponentInfo';
 
 const RightPanel : FC = () => {
+  const [activeKey, setActiveKey] = useState('prop');
+  const { selectedId } = useGetComponentInfo()
+  useEffect(() => {
+    if(selectedId) setActiveKey('prop')
+    else setActiveKey('setting')
+  }, [selectedId])
   const tabsItems = [
     {
       key: 'prop',
@@ -25,10 +33,12 @@ const RightPanel : FC = () => {
           页面设置
         </span>
       ),
-      children: <div>页面设置</div>
+      children: <div>
+        <PageSetting />
+      </div>
     }
   ]
-  return <Tabs defaultActiveKey='prop' items={tabsItems} />
+  return <Tabs activeKey={activeKey} items={tabsItems} />
 }
 
 export default RightPanel
