@@ -6,11 +6,11 @@ import PageSetting from './PageSetting';
 import useGetComponentInfo from '../../../hooks/useGetComponentInfo';
 
 const RightPanel : FC = () => {
-  const [activeKey, setActiveKey] = useState('prop');
+  const [activeKey, setActiveKey] = useState('setting');
   const { selectedId } = useGetComponentInfo()
   useEffect(() => {
-    if(selectedId) setActiveKey('prop')
-    else setActiveKey('setting')
+    // if(selectedId) setActiveKey('prop')
+    // else setActiveKey('setting')
   }, [selectedId])
   const tabsItems = [
     {
