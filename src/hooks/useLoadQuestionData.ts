@@ -21,7 +21,7 @@ function useLoadQuestionData(){
   useEffect(() => {
     if(!data) return;
 
-    const { title = '', desc = '', js = '', css = '', componentList = [] } = data;
+    const { title = '', desc = '', js = '', css = '', isPublished = false,  componentList = [] } = data;
     let selectedId = ''
     if(componentList.length) {
       selectedId = componentList[0].fe_id
@@ -29,7 +29,7 @@ function useLoadQuestionData(){
     // componentList 存储到 Redux store中
     dispatch(resetComponents({componentList, selectedId}))
     // pageInfo 存储到 Redux store中
-    dispatch(resetPageInfo({title, desc, js, css}))
+    dispatch(resetPageInfo({title, desc, js, css, isPublished}))
   }, [data])
   
   useEffect(() => {
